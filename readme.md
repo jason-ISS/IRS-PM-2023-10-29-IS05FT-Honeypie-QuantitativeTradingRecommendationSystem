@@ -54,6 +54,9 @@ You need to get real-time data and API from a certain website:
 tushare official site：[Tushare_data](https://www.tushare.pro/)
 to get api token：[Tushare_data](https://www.tushare.pro/user/token)
 
+AlphaVantage official site：[AlphaVantage_data](https://www.alphavantage.co/)
+to get api token：[AlphaVantage_data](https://www.alphavantage.co/support/#api-key)
+
 **Project Deployment**：
 pip install --r requirements.txt
 
