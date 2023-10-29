@@ -1,0 +1,8 @@
+Group name: Honeypie
+Group members:
+  Chen Yifei    A0285831X
+  Wang Zishuo   A0285834R
+  Li Xin        A0285850W
+  Wang Jinglong A0285929H
+  Gan Yaqi      A0286039W
+Github link: https://github.com/jason-ISS/IRS-PM-2023-10-29-IS05FT-Honeypie-QuantitativeTradingRecommendationSystem
