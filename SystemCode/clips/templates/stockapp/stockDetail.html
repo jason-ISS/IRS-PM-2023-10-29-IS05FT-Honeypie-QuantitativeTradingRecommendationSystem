@@ -1,0 +1,267 @@
+{% load static %}
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stock detail</title>
+    <!-- Bootstrap 4 CSS -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.css' %}">#}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <style>
+        body {
+            padding: 2rem;
+        }
+
+        table {
+            width: auto;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>{{ data.name }} - {{ data.ts_code }}</h1>
+    <table class="table table-striped">
+        <tbody>
+
+    {% for key, value in data.items %}
+        <tr>
+            <th><span id="{{ key }}">{{ key }}</span></th>
+            <td>{{ value }}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/stock/" class="btn btn-primary">Return</a>
+    <a href="/stock/actions/predict/{{ data.ts_code }}" class="btn btn-primary">Forecast Stock</a>
+
+    <div class="container">
+        <div class="panel panel-default" style="margin-bottom: 50px">
+            <div class="panel-heading"
+                 style="font-size: 30px; text-align: center; margin-right: 110px; margin-bottom: 0px">{{ data.name }}</div>
+            <div class="panel-body" style="margin-top: 0px">
+                <div id="chart_region" style="width: 1000px; height: 400px"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default" style="margin-bottom: 50px">
+            <div class="panel-heading"
+                 style="font-size: 30px; text-align: center; margin-right: 110px; margin-bottom: 0px">MACD
+            </div>
+            <div class="panel-body" style="margin-top: 0px">
+                <div id="chart_macd" style="width: 1000px; height: 500px"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default" style="margin-bottom: 50px">
+            <div class="panel-heading"
+                 style="font-size: 30px; text-align: center; margin-right: 110px; margin-bottom: 0px">KDJ
+            </div>
+            <div class="panel-body" style="margin-top: 0px">
+                <div id="chart_kdj" style="width: 1000px; height: 500px"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default" style="margin-bottom: 50px">
+            <div class="panel-heading"
+                 style="font-size: 30px; text-align: center; margin-right: 110px; margin-bottom: 0px">W&M
+            </div>
+            <div class="panel-body" style="margin-top: 0px">
+                <div id="chart_wm" style="width: 1000px; height: 500px"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default" style="margin-bottom: 50px">
+            <div class="panel-heading"
+                 style="font-size: 30px; text-align: center; margin-right: 110px; margin-bottom: 0px">BIAS
+            </div>
+            <div class="panel-body" style="margin-top: 0px">
+                <div id="chart_bias" style="width: 1000px; height: 500px"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel panel-default" style="margin-bottom: 50px">
+            <div class="panel-heading"
+                 style="font-size: 30px; text-align: center; margin-right: 110px; margin-bottom: 0px">BOLL
+            </div>
+            <div class="panel-body" style="margin-top: 0px">
+                <div id="chart_boll" style="width: 1000px; height: 500px"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        initLine();
+    })
+    function regionOption() {
+        var option = {
+
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: [],
+                bottom: 0,
+                selected: {
+                    'open': true,
+                    'high': false,
+                    'low': false,
+                    'close': true,
+                    'change': false,
+                    'vol': false,
+                    'amount': false,
+                }
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: []
+        };
+        return option;
+    }
+    function indicatorsOption() {
+        var option = {
+
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: [],
+                bottom: 0,
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: []
+        };
+        return option;
+    }
+    function initLine() {
+        var chart_region = echarts.init(document.getElementById('chart_region'));
+        var chart_macd = echarts.init(document.getElementById('chart_macd'));
+        var chart_kdj = echarts.init(document.getElementById('chart_kdj'));
+        var chart_wm = echarts.init(document.getElementById('chart_wm'));
+        var chart_bias = echarts.init(document.getElementById('chart_bias'));
+        var chart_boll = echarts.init(document.getElementById('chart_boll'));
+
+        var option_region = regionOption();
+        var option_macd = indicatorsOption();
+        var option_kdj = indicatorsOption();
+        var option_wm = indicatorsOption();
+        var option_bias = indicatorsOption();
+        var option_boll = indicatorsOption();
+
+        $.ajax({
+            url: '/stock/chart/line?ts_code={{ data.ts_code }}',
+            type: "get",
+            dataType: "JSON",
+            success: function (res) {
+                if (res.status) {
+                    // 原始的开盘价,最高价,最低价,收盘价,当天变化,成交量,成交额
+                    option_region.legend.data = res.data.legend.slice(0, 7);
+                    option_region.xAxis.data = res.data.x_axis;
+                    option_region.series = res.data.series_list.slice(0, 7);
+
+                    //MACD 各指标线
+                    option_macd.legend.data = res.data.legend.slice(7, 10);
+                    option_macd.xAxis.data = res.data.x_axis;
+                    option_macd.series = res.data.series_list.slice(7, 10);
+
+                    //KDJ 各指标线
+                    option_kdj.legend.data = res.data.legend.slice(10, 13);
+                    option_kdj.xAxis.data = res.data.x_axis;
+                    option_kdj.series = res.data.series_list.slice(10, 13);
+
+                    //W&M 指标线
+                    option_wm.legend.data = res.data.legend.slice(13, 14);
+                    option_wm.xAxis.data = res.data.x_axis;
+                    option_wm.series = res.data.series_list.slice(13, 14);
+
+
+                    // BIAS 指标线
+                    option_bias.legend.data = res.data.legend.slice(15, 16);
+                    option_bias.xAxis.data = res.data.x_axis;
+                    option_bias.series = res.data.series_list.slice(15, 16);
+
+                    //BOLL指标线
+                    option_boll.legend.data = res.data.legend.slice(16);
+                    option_boll.xAxis.data = res.data.x_axis;
+                    option_boll.series = res.data.series_list.slice(16);
+
+
+                    chart_region.setOption(option_region);
+                    chart_macd.setOption(option_macd);
+                    chart_kdj.setOption(option_kdj);
+                    chart_wm.setOption(option_wm);
+                    chart_bias.setOption(option_bias);
+                    chart_boll.setOption(option_boll);
+
+                }
+            }
+        })
+    }
+
+     var keys = {'ts_code':'股票代码', 'name':'名称', 'area':'地区', 'industry':'行业', 'list_date':'日期', 'open':'开盘价', 'close':'收盘价', 'change':'变化率', 'vol':'成交量', 'amount':'总量'};
+
+    function replaceKeys() {
+        for (var key in keys) {
+            var span = document.getElementById(key);
+            if (span) {
+                span.innerHTML = keys[key];
+            }
+        }
+    }
+
+    replaceKeys();
+</script>
+
+</html>
+
+
+
+
+
+

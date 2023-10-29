@@ -1,0 +1,14 @@
+Django==4.1
+joblib==1.2.0
+keras
+matplotlib==3.6.1
+numpy==1.23.4
+pandas==1.5.1
+prophet==1.1.1
+requests==2.28.1
+scikit_learn==1.2.2
+scipy==1.9.3
+statsmodels==0.13.2
+tensorflow
+tqdm==4.64.1
+tushare==1.2.89
